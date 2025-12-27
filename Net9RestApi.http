@@ -1,0 +1,6 @@
+@Net9RestApi_HostAddress = http://localhost:5209
+
+GET {{Net9RestApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
