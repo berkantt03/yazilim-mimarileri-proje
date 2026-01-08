@@ -1,45 +1,46 @@
 using Microsoft.EntityFrameworkCore;
+using Net9RestApi.Data;
+using Net9RestApi.Repositories;
+using Microsoft.Extensions.Hosting; // IsDevelopment() için gerekli
+using Microsoft.AspNetCore.Builder; // WebApplication için gerekli
+
 var builder = WebApplication.CreateBuilder(args);
-// 1. Veritabanı Bağlantısı (Dependency Injection)
-builder.Services.AddDbContext<Net9RestApi.Data.AppDbContext>(options =>
+
+// --- 1. Servislerin Eklenmesi (Dependency Injection) ---
+
+// Controller desteğini ekle
+builder.Services.AddControllers();
+
+// Swagger / OpenAPI yapılandırması (Test arayüzü için)
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Veritabanı Bağlantısı (SQLite)
+// appsettings.json dosyasındaki "DefaultConnection" ayarını okur.
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// Repository Servisi Kaydı
+// Generic olduğu için typeof ile tanımlıyoruz.
+// Scoped: Her HTTP isteği için yeni bir nesne üretir (Web API için en uygunu).
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// --- 2. HTTP İstek Hattı (Middleware Pipeline) ---
+
+// Geliştirme ortamındaysak Swagger'ı aktif et
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+// Controller'ları eşleştir (Endpoint'leri aktif et)
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
