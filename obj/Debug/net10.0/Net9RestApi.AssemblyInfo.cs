@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Net9RestApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e29679f18cf782b519b44462f0e5bf61cc0d271a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+007e7d0426df3965ab2e753a93ea4bab454f0fc0")]
 [assembly: System.Reflection.AssemblyProductAttribute("Net9RestApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Net9RestApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
