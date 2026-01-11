@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Net9RestApi.DTOs;
 using Net9RestApi.Services;
+using Net9RestApi.Shared; // <-- ApiResponse sınıfını buradan tanıyacak
 
 namespace Net9RestApi.Controllers
 {
@@ -47,6 +48,7 @@ namespace Net9RestApi.Controllers
             try
             {
                 await _userService.UpdateAsync(id, updateDto);
+                // Güncelleme işleminde data dönmeye gerek yok, null dönüyoruz.
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Kullanıcı güncellendi"));
             }
             catch (Exception ex)
@@ -59,7 +61,8 @@ namespace Net9RestApi.Controllers
         public async Task<ActionResult<ApiResponse<object>>> Delete(int id)
         {
             await _userService.DeleteAsync(id);
-            return Ok(ApiResponse<object>.SuccessResponse(null, "Kullanıcı silindi"));
+            // Silme işleminde data dönmeye gerek yok, null dönüyoruz.
+            return Ok(Shared.ApiResponse<object>.SuccessResponse(null, "Kullanıcı silindi"));
         }
     }
 }

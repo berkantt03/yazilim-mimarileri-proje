@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Net9RestApi.DTOs;
 using Net9RestApi.Services;
+using Net9RestApi.Shared;
 
 namespace Net9RestApi.Controllers
 {
